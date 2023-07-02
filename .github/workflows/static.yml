@@ -9,6 +9,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  GODOT_VERSION: "4.0.3"
+
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
@@ -32,14 +35,38 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - uses: paulloz/godot-action@v1.2
+      - name: Cache Godot files
+        id: cache-godot
+        uses: actions/cache@v3
         with:
-          version: "4.0.3"
+          key: ${{env.GODOT_VERSION}}
+          path: |
+            ~/.local/share/godot/**
+            /usr/local/bin/godot
+            ~/.config/godot/**
+      - name: Download and config Godot Engine headless linux server and templates
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          wget -q https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip
+          wget -q https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
+          mkdir ~/.cache
+          mkdir -p ~/.config/godot
+          mkdir -p ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+          unzip Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip
+          mv Godot_v${GODOT_VERSION}-stable_linux_headless.64 /usr/local/bin/godot
+          unzip Godot_v${GODOT_VERSION}-stable_export_templates.tpz
+          mv templates/* ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+          rm -f Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip Godot_v${GODOT_VERSION}-stable_export_templates.tpz
+          godot -e -q
+
       # Under Project > Export a HTML export with the name "Web" must exist
-      - run: |
-          godot --version
+      - name: Export
+        shell: bash
+        run: |
           mkdir -p build/web
-          godot --export-release "Web" "build/web/index.html"
+          godot --path ${{ inputs.working-directory }} --export "Web" "build/web/index.html"
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
