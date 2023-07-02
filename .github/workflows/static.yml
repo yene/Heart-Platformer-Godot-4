@@ -59,12 +59,13 @@ jobs:
           godot --version
 
       # Under Project > Export a HTML export with the name "Web" must exist
+      # Github Action has no X11, so you need to import the .godot folder
       - name: Godot Export
         shell: bash
         run: |
           set -ex
           mkdir -p build/web
-          timeout 25s godot -e --headless # workaround to import assets https://github.com/godotengine/godot-proposals/issues/1362
+          # timeout 25s godot -e --headless # workaround to import assets https://github.com/godotengine/godot-proposals/issues/1362
           godot --headless --export-release "Web" "build/web/index.html"
 
       - name: Setup Pages
