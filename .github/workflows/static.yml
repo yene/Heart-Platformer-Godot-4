@@ -28,7 +28,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: macos-latest # ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -69,7 +69,7 @@ jobs:
         run: |
           set -ex
           mkdir -p build/web
-          # timeout 25s godot -e --headless # workaround to import assets https://github.com/godotengine/godot-proposals/issues/1362
+          timeout 25s godot -e # workaround to import assets https://github.com/godotengine/godot-proposals/issues/1362
           godot --headless --export-release "Web" "build/web/index.html"
           echo $?
 
