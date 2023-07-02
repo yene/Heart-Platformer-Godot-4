@@ -46,7 +46,7 @@ jobs:
         shell: bash
         run: |
           set -ex
-          wget -q https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip
+          wget -q https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
           wget -q https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           mkdir ~/.cache
           mkdir -p ~/.config/godot
@@ -63,7 +63,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p build/web
-          godot --path ${{ inputs.working-directory }} --export "Web" "build/web/index.html"
+          godot --export-release "Web" "build/web/index.html"
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
