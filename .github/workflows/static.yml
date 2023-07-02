@@ -56,12 +56,15 @@ jobs:
           unzip -q Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           mv templates/* ~/.local/share/godot/templates/${GODOT_VERSION}.stable
           rm -f Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip Godot_v${GODOT_VERSION}-stable_export_templates.tpz
+          godot --version
 
       # Under Project > Export a HTML export with the name "Web" must exist
-      - name: Export
+      - name: Godot Export
         shell: bash
         run: |
+          set -ex
           mkdir -p build/web
+          timeout 25s godot -e # workaround to import assets https://github.com/godotengine/godot-proposals/issues/1362
           godot --headless --export-release "Web" "build/web/index.html"
 
       - name: Setup Pages
