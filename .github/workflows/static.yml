@@ -51,19 +51,19 @@ jobs:
           mkdir ~/.cache
           mkdir -p ~/.config/godot
           mkdir -p ~/.local/share/godot/templates/${GODOT_VERSION}.stable
-          unzip Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
+          unzip -q Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
           mv Godot_v${GODOT_VERSION}-stable_linux.x86_64 /usr/local/bin/godot
-          unzip Godot_v${GODOT_VERSION}-stable_export_templates.tpz
+          unzip -q Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           mv templates/* ~/.local/share/godot/templates/${GODOT_VERSION}.stable
           rm -f Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip Godot_v${GODOT_VERSION}-stable_export_templates.tpz
-          godot -e -q
+          godot -e -q --headless
 
       # Under Project > Export a HTML export with the name "Web" must exist
       - name: Export
         shell: bash
         run: |
           mkdir -p build/web
-          godot --export-release "Web" "build/web/index.html"
+          godot --headless --export-release "Web" "build/web/index.html"
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
