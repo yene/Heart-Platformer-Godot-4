@@ -56,7 +56,6 @@ jobs:
           unzip -q Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           mv templates/* ~/.local/share/godot/templates/${GODOT_VERSION}.stable
           rm -f Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip Godot_v${GODOT_VERSION}-stable_export_templates.tpz
-          godot -e -q --headless
 
       # Under Project > Export a HTML export with the name "Web" must exist
       - name: Export
